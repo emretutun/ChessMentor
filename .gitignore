@@ -1,0 +1,18 @@
+# Derleme çıktıları
+bin/
+obj/
+artifacts/
+TestResults/
+*.user
+*.suo
+.vs/
+.vscode/
+.idea/
+
+# Stockfish (scripts/get-stockfish.ps1 ile indirilir, GPLv3 ayrı program)
+engine/
+
+# Yayın çıktıları
+publish/
+AppPackages/
+*.msix

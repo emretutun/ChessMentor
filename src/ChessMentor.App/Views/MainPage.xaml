@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="ChessMentor.App.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:ChessMentor.App.ViewModels"
+    xmlns:controls="clr-namespace:ChessMentor.App.Controls"
+    x:DataType="vm:MainViewModel"
+    Title="Oyna"
+    BackgroundColor="#161512">
+
+    <ContentPage.Resources>
+        <Style x:Key="SecondaryButton" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="#3C3A36" />
+            <Setter Property="TextColor" Value="#E8E6E3" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="MinimumHeightRequest" Value="34" />
+        </Style>
+        <Style x:Key="TabButton" TargetType="Button">
+            <Setter Property="TextColor" Value="#E8E6E3" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="MinimumHeightRequest" Value="30" />
+        </Style>
+        <Style x:Key="Caption" TargetType="Label">
+            <Setter Property="TextColor" Value="#9E9B98" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="BackgroundColor" Value="#302E2B" />
+            <Setter Property="StrokeThickness" Value="0" />
+            <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid ColumnDefinitions="*,440" ColumnSpacing="16" Padding="16">
+
+        <!--  ============ SOL: TAHTA ============  -->
+        <Grid x:Name="BoardArea" Grid.Column="0">
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="6">
+
+                <!--  Rakip satırı  -->
+                <Grid ColumnDefinitions="*,Auto" Margin="32,0,0,0">
+                    <Label Text="{Binding OpponentLabel}" TextColor="#E8E6E3" FontSize="15" FontAttributes="Bold" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="{Binding OpponentCaptured}" TextColor="#C9C6C2" FontSize="17" VerticalOptions="Center" />
+                </Grid>
+
+                <HorizontalStackLayout Spacing="8">
+                    <controls:EvalBar x:Name="EvalBarView" WidthRequest="24" />
+                    <controls:BoardView x:Name="Board" />
+                </HorizontalStackLayout>
+
+                <!--  Oyuncu satırı  -->
+                <Grid ColumnDefinitions="*,Auto" Margin="32,0,0,0">
+                    <Label Text="{Binding PlayerLabel}" TextColor="#E8E6E3" FontSize="15" FontAttributes="Bold" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="{Binding PlayerCaptured}" TextColor="#C9C6C2" FontSize="17" VerticalOptions="Center" />
+                </Grid>
+
+                <!--  Durum özeti + ok açıklaması  -->
+                <VerticalStackLayout Margin="32,4,0,0" Spacing="2">
+                    <Label Text="{Binding EvalSummary}" TextColor="#E8E6E3" FontSize="14" />
+                    <Label Style="{StaticResource Caption}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="━ " TextColor="#5C9E31" FontAttributes="Bold" />
+                                <Span Text="daha iyi hamle    " />
+                                <Span Text="━ " TextColor="#3692E7" FontAttributes="Bold" />
+                                <Span Text="ipucu    " />
+                                <Span Text="━ " TextColor="#D9443C" FontAttributes="Bold" />
+                                <Span Text="rakibin tehdidi" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </Grid>
+
+        <!--  ============ SAĞ: KOÇ PANELİ ============  -->
+        <Border Grid.Column="1" BackgroundColor="#262421" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="14">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" RowSpacing="10">
+
+                <!--  1) Başlık  -->
+                <Label Text="♞ ChessMentor" FontSize="20" FontAttributes="Bold" TextColor="#E8E6E3" />
+
+                <!--  2) Durum çubuğu  -->
+                <Border Grid.Row="1" BackgroundColor="{Binding StatusColor}" StrokeThickness="0" StrokeShape="RoundRectangle 8" Padding="12,9">
+                    <HorizontalStackLayout Spacing="8">
+                        <ActivityIndicator IsRunning="{Binding IsBotThinking}" IsVisible="{Binding IsBotThinking}" Color="White" HeightRequest="18" WidthRequest="18" />
+                        <Label Text="{Binding Status}" TextColor="White" FontSize="16" FontAttributes="Bold" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Border>
+
+                <!--  3a) Oyun kurulumu (oyun başlamadan / bitince)  -->
+                <Border Grid.Row="2" Style="{StaticResource Card}" Padding="12" IsVisible="{Binding IsSetupVisible}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Yeni oyun" FontSize="15" FontAttributes="Bold" TextColor="#E8E6E3" />
+                        <Grid ColumnDefinitions="2*,*" ColumnSpacing="8" RowDefinitions="Auto,Auto">
+                            <Label Text="Rakibin seviyesi" Style="{StaticResource Caption}" />
+                            <Label Grid.Column="1" Text="Rengin" Style="{StaticResource Caption}" />
+                            <Picker Grid.Row="1" ItemsSource="{Binding Levels}" SelectedIndex="{Binding SelectedLevelIndex}" TextColor="#E8E6E3" />
+                            <Picker Grid.Row="1" Grid.Column="1" ItemsSource="{Binding ColorOptions}" SelectedIndex="{Binding ColorIndex}" TextColor="#E8E6E3" />
+                        </Grid>
+                        <Label Text="{Binding LevelDescription}" Style="{StaticResource Caption}" />
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="2">
+                            <CheckBox IsChecked="{Binding ThinkFirst}" Color="#81B64C" VerticalOptions="Center" />
+                            <Label Grid.Column="1" VerticalOptions="Center" TextColor="#E8E6E3" FontSize="13"
+                                   Text="Önce sen düşün: tehlikeleri hemen söyleme, beni düşündür" LineBreakMode="WordWrap" />
+                            <CheckBox Grid.Row="1" IsChecked="{Binding PauseOnMistakes}" Color="#81B64C" VerticalOptions="Center" />
+                            <Label Grid.Row="1" Grid.Column="1" VerticalOptions="Center" TextColor="#E8E6E3" FontSize="13"
+                                   Text="Hatada dur: hata yapınca tekrar deneme fırsatı ver" LineBreakMode="WordWrap" />
+                        </Grid>
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" Margin="0,4,0,0">
+                            <Button Text="▶  Oyunu başlat" Command="{Binding StartGameCommand}" BackgroundColor="#629924" TextColor="White" FontAttributes="Bold" FontSize="15" CornerRadius="6" MinimumHeightRequest="40" />
+                            <Button Grid.Column="1" Text="Vazgeç" Command="{Binding CancelSetupCommand}" Style="{StaticResource SecondaryButton}" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  3b) Oyun sırasında özet satırı  -->
+                <Grid Grid.Row="2" ColumnDefinitions="*,Auto" IsVisible="{Binding IsGameBarVisible}">
+                    <Label Text="{Binding GameSummary}" Style="{StaticResource Caption}" FontSize="13" VerticalOptions="Center" />
+                    <Button Grid.Column="1" Text="♟ Yeni oyun" Command="{Binding ShowSetupCommand}" Style="{StaticResource SecondaryButton}" />
+                </Grid>
+
+                <!--  4) Uyarı kutusu (tehdit / kritik an)  -->
+                <Border Grid.Row="3" IsVisible="{Binding HasAlert}" StrokeThickness="2" Stroke="{Binding Alert.Accent, FallbackValue=Transparent}" StrokeShape="RoundRectangle 8" BackgroundColor="#2E2A22" Padding="12,8">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="{Binding Alert.Title}" TextColor="#E8E6E3" FontAttributes="Bold" FontSize="14" />
+                        <Label Text="{Binding Alert.Body}" TextColor="#D8D5D1" FontSize="13" LineBreakMode="WordWrap" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!--  5) Koç kartı: en son değerlendirme  -->
+                <Border Grid.Row="4" Style="{StaticResource Card}" IsVisible="{Binding HasLatest}">
+                    <Grid ColumnDefinitions="6,*">
+                        <BoxView Color="{Binding Latest.Accent, FallbackValue=Transparent}" />
+                        <ScrollView Grid.Column="1" MaximumHeightRequest="230">
+                            <VerticalStackLayout Padding="12,10" Spacing="6">
+                                <Label Text="{Binding Latest.Title}" TextColor="#FFFFFF" FontAttributes="Bold" FontSize="17" LineBreakMode="WordWrap" />
+                                <Label Text="{Binding Latest.Body}" IsVisible="{Binding Latest.HasBody, FallbackValue=False}" TextColor="#DDDAD6" FontSize="14" LineHeight="1.25" LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                        </ScrollView>
+                    </Grid>
+                </Border>
+
+                <!--  6) Hata sonrası seçim  -->
+                <Grid Grid.Row="5" ColumnDefinitions="*,*" ColumnSpacing="8" IsVisible="{Binding IsPaused}">
+                    <Button Text="🔁  Tekrar dene" Command="{Binding RetryCommand}" BackgroundColor="#3692E7" TextColor="White" FontAttributes="Bold" FontSize="14" CornerRadius="6" MinimumHeightRequest="40" />
+                    <Button Grid.Column="1" Text="▶️  Devam et" Command="{Binding ContinueCommand}" Style="{StaticResource SecondaryButton}" FontSize="14" />
+                </Grid>
+
+                <!--  7) Ana eylemler  -->
+                <VerticalStackLayout Grid.Row="6" Spacing="6">
+                    <Label Text="{Binding OpponentMove}" IsVisible="{Binding HasOpponentMove}" TextColor="#C9C6C2" FontSize="13" />
+                    <Grid ColumnDefinitions="2*,*" ColumnSpacing="8">
+                        <Button Text="{Binding HintText}" Command="{Binding HintCommand}" BackgroundColor="#3692E7" TextColor="White" FontAttributes="Bold" FontSize="14" CornerRadius="6" MinimumHeightRequest="40" />
+                        <Button Grid.Column="1" Text="↩️ Geri al" Command="{Binding UndoCommand}" Style="{StaticResource SecondaryButton}" FontSize="14" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                        <Button Text="🔄 Tahtayı çevir" Command="{Binding FlipCommand}" Style="{StaticResource SecondaryButton}" FontSize="12" />
+                        <Button Grid.Column="1" Text="📋 Kaydı kopyala" Command="{Binding CopyPgnCommand}" Style="{StaticResource SecondaryButton}" FontSize="12" />
+                        <Button Grid.Column="2" Text="🏳️ Terk et" Command="{Binding ResignCommand}" Style="{StaticResource SecondaryButton}" FontSize="12" />
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!--  8) Hamleler / Geçmiş sekmeleri  -->
+                <Border Grid.Row="7" BackgroundColor="#1E1D1B" StrokeThickness="0" StrokeShape="RoundRectangle 8" Padding="8">
+                    <Grid RowDefinitions="Auto,*" RowSpacing="6">
+                        <HorizontalStackLayout Spacing="4">
+                            <Button Text="📜 Hamleler" Command="{Binding ShowMovesCommand}" BackgroundColor="{Binding MovesTabColor}" Style="{StaticResource TabButton}" />
+                            <Button Text="💬 Koçun notları" Command="{Binding ShowHistoryCommand}" BackgroundColor="{Binding HistoryTabColor}" Style="{StaticResource TabButton}" />
+                        </HorizontalStackLayout>
+
+                        <!--  Hamle listesi  -->
+                        <CollectionView x:Name="MovesList" Grid.Row="1" ItemsSource="{Binding MoveRows}" SelectionMode="None" IsVisible="{Binding ShowMoves}">
+                            <CollectionView.EmptyView>
+                                <Label Text="Henüz hamle yapılmadı." Style="{StaticResource Caption}" Margin="6" />
+                            </CollectionView.EmptyView>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MoveRow">
+                                    <Grid ColumnDefinitions="32,*,*" Padding="4,3">
+                                        <Label Text="{Binding Number}" TextColor="#9E9B98" FontSize="13" />
+                                        <Label Grid.Column="1" Text="{Binding White}" TextColor="{Binding WhiteColor}" FontSize="13" LineBreakMode="TailTruncation" />
+                                        <Label Grid.Column="2" Text="{Binding Black}" TextColor="{Binding BlackColor}" FontSize="13" LineBreakMode="TailTruncation" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <!--  Koçun önceki notları  -->
+                        <CollectionView Grid.Row="1" ItemsSource="{Binding History}" SelectionMode="None" IsVisible="{Binding ShowHistory}">
+                            <CollectionView.EmptyView>
+                                <Label Text="Koçun önceki notları burada görünecek." Style="{StaticResource Caption}" Margin="6" />
+                            </CollectionView.EmptyView>
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Vertical" ItemSpacing="6" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:MentorMessage">
+                                    <Grid ColumnDefinitions="4,*" BackgroundColor="#2A2825">
+                                        <BoxView Color="{Binding Accent}" />
+                                        <VerticalStackLayout Grid.Column="1" Padding="8,6" Spacing="2">
+                                            <Label Text="{Binding Title}" TextColor="#E8E6E3" FontAttributes="Bold" FontSize="13" LineBreakMode="WordWrap" />
+                                            <Label Text="{Binding Body}" IsVisible="{Binding HasBody}" TextColor="#B5B2AE" FontSize="12" LineBreakMode="WordWrap" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ChessMentor.App/ChessMentor.App.csproj" />
+    <Project Path="src/ChessMentor.Core/ChessMentor.Core.csproj" />
+    <Project Path="src/ChessMentor.Engine/ChessMentor.Engine.csproj" />
+    <Project Path="src/ChessMentor.Mentor/ChessMentor.Mentor.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ChessMentor.Tests/ChessMentor.Tests.csproj" />
+  </Folder>
+</Solution>
