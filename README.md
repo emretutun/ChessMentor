@@ -173,8 +173,7 @@ ChessMentor/
 ## 📜 Lisans
 
 - ChessMentor kaynak kodu: [MIT](LICENSE)
-- **Stockfish** ayrı bir programdır ve [GPLv3](https://github.com/official-stockfish/Stockfish/blob/master/Copying.txt) lisanslıdır. Bu depo Stockfish'i **içermez**; betik onu resmi kaynağından indirir. Uygulamayı Stockfish ile **birlikte paketleyip dağıtırsan** GPLv3 koşullarına (lisans metnini ekleme, kaynak koduna erişim sağlama) uyman gerekir.
+- **Stockfish** ayrı bir programdır ve [GPLv3](https://github.com/official-stockfish/Stockfish/blob/master/Copying.txt) lisanslıdır. Bu depo Stockfish'i **içermez**.
 
 - **Taş görselleri** (`src/ChessMentor.App/Resources/Pieces`): Colin M.L. Burnett'in "cburnett" seti, [Wikimedia Commons](https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces) üzerinden. GFDL / BSD / GPL / CC BY-SA 3.0 lisanslarından herhangi biri altında kullanılabilir.
 
-Teşekkürler: [Stockfish](https://stockfishchess.org) ekibine ve hamle sınıflandırma formülleri için [Lichess](https://lichess.org)'e.
